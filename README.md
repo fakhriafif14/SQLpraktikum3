@@ -1,240 +1,329 @@
-# SQLpraktikum3
-## DATA MODELING MAP
-```
-mahasiswa (nim, nama, jenis_kelamin, tgl_lahir, jalan, kota, kodepos, no_hp, kd_ds)
-dosen (kd_ds, nama)
-matakuliah (kd_mk, nama, sks)
-jadwalmengajar (kd_ds, kd_mk, hari, jam, ruang)
-krsmahasiswa (nim, kd_mk, kd_ds, semester, nilai)
-```
-- Buat DDL Script berdasarkan skema ERD tersebut diatas. 
-- Jalankan script DDL tersebut pada DBMS MySQL.
+# Praktikum3
 
-## Langkah-langkah :
-
-## 1. Membuat tabel mahasiswa :
 ```
-CREATE TABLE mahasiswa (
-    nim VARCHAR(10) PRIMARY KEY,
-    nama VARCHAR(25) NOT NULL,
-    jenis_kelamin ENUM('Laki-Laki', 'Perempuan'),
-    tgl_lahir DATE NOT NULL,
-    jalan VARCHAR(15) NOT NULL,
-    kota VARCHAR(15) NOT NULL,
-    kodepos VARCHAR(5) NOT NULL,
-    no_hp VARCHAR(15) NOT NULL,
-    kd_ds VARCHAR(10) NOT NULL,
-    FOREIGN KEY (kd_ds) REFERENCES Dosen(kd_ds)
-    );
+Nama    : fakhri afif muhaimin
+NIM     : 312310632
+Kelas   : TI.23.A6
+Matkul  : Basis Data
+Dosen   : Agung Nugroho, S.Kom., M.Kom.
 ```
 
-## Tampilkan hasil Tabel :
-```DESC mahasiswa;```
+# **SQL Constraint**
 
-![](foto/1.png)
+- SQL Constraint digunakan untuk menentukan aturan untuk data dalam tabel.
+- Constraint digunakan untuk membatasi jenis data yang bisa masuk ke tabel. Ini memastikan keakuratan dan keandalan data dalam tabel.
+- Constraint dapat berupa level kolom atau level tabel.
+- Constraint level kolom berlaku untuk kolom, dan batasan level tabel berlaku untuk seluruh tabel.
 
-## 2. Membuat tabel dosen :
-```
-CREATE TABLE dosen (
-    kd_ds VARCHAR(10) PRIMARY KEY,
-    nama VARCHAR(35) NOT NULL
-    );
-```
-## Tampilkan tabel :
-```DESC dosen;```
+## **Tugas Praktikum**
 
-![](foto/2.png)
+- Implementasikan penggunaan **_CONSTRAINT FOREIGN KEY_** pada semua tabel yang berelasi.
+- yang perlu diperhatikan:
+  - tipe data pada field yang berelasi harus sama termasuk juga ukuran datanya.
+  - misal: pada tabel dosen, kd_ds VARCHAR(10) maka tabel yang merujuk yaitu tabel mahasiswa, kd_ds juga harus bertipe VARCHAR(10).
 
-## 3. Membuat tabel mata kuliah;
-```
-CREATE TABLE matakuliah (
-    kd_mk VARCHARr(10) PRIMARY KEY,
-    nama VARCHARr30) NOT NULL,
-    sks INT NOT NULL
-    );
-```
+1. Lakukan penambahan data pada tabel mahasiswa dengan mengisi kd_ds yang belum ada pada data dosen.
+2. Hapus satu record data pada tabel dosen yang telah dirujuk pada tabel mahasiswa.
+3. Ubah mode menjadi ON UPDATE CASCADE ON DELETE RESTRICT
+4. Lakukan perubahan data pada tabel dosen (kd_ds)
+5. Lakukan penghapusan data pada tabel dosen
+6. Ubah mode menjadi ON UPDATE CASCADE ON DELETE SET NULL
+7. Lakukan penghapusan data pada tabel dosen
 
-## Tampilkan tabel :
-```DESC matakuliah;```
 
-![](foto/3.png)
 
-## 4. Membuat tabel jadwal mengajar :
-```
-CREATE jadwalmengajar (
-    kd_ds VARCHAR(10) NOT NULL,
-    kd_mk VARCHAR(10) NOT NULL,
-    hari ENUM('Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu') NOT NULL,
-    jam TIME NOT NULL,
-    ruang VARCHAR(555) NOT NULL,
-    PRIMARY KEY (kd_ds, kd_mk, hari, jam),
-    FOREIGN KEY (kd_ds) REFERENCES Dosen(kd_ds),
-    FOREIGN KEY (kd_mk) REFERENCES Matakuliah(kd_mk)
-    ); 
-```
+### Syntax SQL
+## Implementasi CONSTRAINT FOREIGN KEY
+Berikut ini adalah langkah-langkah dan penerapan dalam pengimplementasian CONSTRAINT FOREIGN KEY pada Tabel mahasiswa dalam kolom kd_ds
 
-# Tampilkan tabel :
-```DESC jadwalmengajar;```
+* Pastikan kamu sudah mempunyai sebuah database yang berisi Tabel mahasiswa dan Tabel dosen, dan juga didalam tabel tersebut sudah berisi sebuah data. Berikut adalah contohnya:
 
-![](foto/4.png)
+![image](ss/ss6.png)
 
-## 5. Membuat tabel KRS mahasiswa :
-```
-CREATE TABLE KRSMahasiswa (
+- Membuat foreign key
+
+  - Dalam ALTER TABLE:
+    ```SQL
+    ALTER TABLE mahasiswa
+    ADD CONSTRAINT fk_dosenwali FOREIGN KEY (kd_ds)
+    REFERENCES dosen(kd_ds)
+    ```
+
+![image](ss/ss4.png)
+
+- Dalam CREATE TABLE:
+    ```sql
+    CREATE TABLE mahasiswa(
     nim VARCHAR(10) NOT NULL,
-    kd_mk VARCHAR(10) NOT NULL,
-    kd_ds VARCHAR(10) NOT NULL,
-    semester VARCHAR(10) NOT NULL,
-    nilai FLOAT NOT NULL,
-    PRIMARY KEY (nim, kd_mk),
-    FOREIGN KEY (nim) REFERENCES Mahasiswa(nim),
-    FOREIGN KEY (kd_mk) REFERENCES Matakuliah(kd_mk),
-    FOREIGN KEY (kd_ds) REFERENCES Dosen(kd_ds)
+    nama VARCHAR(100) NOT NULL,
+    kd_ds VARCHAR(10),
+    PRIMARY KEY(nim),
+    CONSTRAINT fk_DosenWali FOREIGN KEY (kd_ds)
+    REFERENCES dosen(kd_ds)
     );
-```
-## Tampilkan tabel :
-`DESC krsmahasiswa;`
+    ```
 
-![](foto/5.png)
+  ```
 
-# Soal Latihan Praktikum
+  ```
+![image](ss/ss3.png)
 
-Berdasarkan table Mahasiswa pada praktikum sebelumnya: (nim, nama, jenis_kelamin, tgl_lahir, jalan, kota, kodepos, no_hp, kd_ds)
 
-# Isi data pada table tersebut sebanyak minimal 5 record data. Tampilkan semua isi/record tabel!
+1. Lakukan penambahan data pada tabel mahasiswa dengan mengisi kd_ds yang belum ada pada data dosen.
 
-- Ubah data tanggal lahir Mahasiswa yang bernama Ari menjadi: 1979-08-31!
-- Tampilkan satu baris / record data yang telah diubah tadi yaitu record dengan nama Ari saja!
-- Hapus Mahasiswa yang bernama Dina!
-- Tampilkan record atau data yang tanggal kelahirannya lebih dari atau sama dengan 1996-1-2!
-- Tampilkan semua Mahasiswa yang berasal dari Bekasi dan berjenis kelamin perempuan!
-- Tampilkan semua Mahasiswa yang berasal dari Bekasi dengan kelamin laki-laki atau Mahasiswa yang berumur lebih dari 22 tahun dengan kelamin wanita!
-- Tampilkan data nama dan alamat Mahasiswa saja dari tabel tersebut
-- Tampilkan data Mahasiswa terurut berdasarkan nama.
+dengan menggunakan kode berikut :
 
-## Mengisi tabel dengan minimal 5 record data :
-```
-INSERT INTO mahasiswa (nim, nama, jenis_kelamin, tgl_lahir, jalan, kota, kodepos, no_hp, kd_ds) VALUES
-(11223344,"ari santoso","Laki-laki","1998-10-12","","Bekasi","","",""), 
-(11223345,"ario talib","Laki-laki","1999-11-16","","Cikarang","","",""), 
-(11223346,"dina marlina","Perempuan","1997-12-01","","Karawang","","",""), 
-(11223347,"lisa ayu","perempuan","1996-01-02","","Bekasi","","",""), 
-(11223348,"tiara wahidah","perempuan","1980-02-05","","Bekasi","","",""), 
-(11223349,"anton sinaga","laki-laki","1988-03-10","","Cikarang","","","");
-```
-## Menampilkan semua isi/record pada tabel bisa menggunakan kode berikut :
 
-```SELECT * FROM mahasiswa;```
-
-![](foto/6.png)
-
-## - Mengubah data tanggal lahir Mahasiswa yang bernama Ari menjadi : 1979-08-31 menggunakan kode berikut :
-
-```UPDATE mahasiswa SET tgl_lahir='1979-08-31' WHERE nama='Ari Santoso;```
-
-![](foto/7.png)
-
-## - Menampilkan satu baris / record data yang telah diubah tadi yaitu record dengan nama Ari saja dengan cara sebagai berikut :
-
-```SELECT * FROM mahasiswa WHERE nama='Ari Santoso;```
-
-![](foto/8.png)
-
-## - Menghapus Mahasiswa yang bernama Dina dengan cara sebagai berikut:
-
-```DELETE FROM mahasiswa WHERE nama='Dina Marlina';```
-
-![](foto/9.png)
-
-## - Menampilkan record atau data yang tanggal kelahirannya lebih dari atau sama dengan 1996-1-2 dengan cara sebagai berikut :
-
-```SELECT * FROM mahasiswa WHERE tgl_lahir<='1996-01-02';```
-
-![](foto/10.png)
-
-## - Menampilkan semua Mahasiswa yang berasal dari Bekasi dan berjenis kelamin perempuan dengan cara sebagai berikut :
-
-```
-SELECT * FROM mahasiswa WHERE kota='bekasi' AND jenis_kelamin='Perempuan';
+```sql
+INSERT INTO dosen (kd_ds, nama) VALUES
+('DS001', 'Abdillah'),
+('DS002', 'Bima'),
+('DS003', 'Catur'),
+('DS004', 'Deni'),
+('DS005', 'Endang');
 ```
 
-![](foto/12.png)
+![image](ss/ss2.png)
 
-## -  Menampilkan semua Mahasiswa yang berasal dari Bekasi dengan kelamin laki-laki atau Mahasiswa yang berumur lebih dari 22 tahun dengan kelamin wanita dengan cara sebagai berikut :
+berikut outputnya : 
+
+
+![image](ss/ss18.png)
+
+
+2. Hapus satu record data pada tabel dosen yang telah dirujuk pada tabel mahasiswa.
+Menghapus data
+```sql
+  DELETE FROM dosen WHERE kd_ds = 'DS001';
 ```
-SELECT * FROM mahasiswa WHERE kota='Bekasi' AND jenis_kelamin='Laki-laki' 
-OR tgl_lahir<='2002-4-22' AND jenis_kelamin='Perempuan';
+
+output :
+
+
+![image](ss/ss7.png)
+
+output eror.
+Jika Anda ingin menghapus record dari tabel "dosen" yang memiliki referensi dari tabel "mahasiswa", Anda dapat menggunakan opsi ON DELETE CASCADE pada konstrain kunci asing untuk melakukan penghapusan secara otomatis dari tabel "mahasiswa" saat record dihapus dari tabel "dosen".
+
+Berikut adalah perbaikan yang perlu dilakukan pada konstrain kunci asing fk_dosenwali di tabel "mahasiswa":
+
+```sql
+ALTER TABLE mahasiswa DROP  
+    FOREIGN KEY fk_dosenwali;
 ```
-![](foto/11.png)
+    
 
-## - Menampilkan data nama dan jalan Mahasiswa saja dari tabel tersebut dengan cara sebagai berikut :
 
-```SELECT nama, jalan FROM mahasiswa;```
+``` sql
+ALTER TABLE mahasiswa
+ADD CONSTRAINT fk_dosenwali
+FOREIGN KEY (kd_ds)
+REFERENCES dosen (kd_ds)
+ON DELETE CASCADE;
+```
 
-![](foto/13.png)
 
-## - Menampilkan data Mahasiswa terurut berdasarkan nama dengan cara sebagai berikut :
+Dengan perubahan di atas, ketika Anda menghapus record dari tabel "dosen" yang memiliki referensi di tabel "mahasiswa", record terkait dalam tabel "mahasiswa" juga akan secara otomatis dihapus.
 
-```SELECT * FROM mahasiswa ORDER BY nama ASC;```
 
-![](foto/14.png)
+![image](ss/ss20.png)
 
-# Evaluasi dan Pertanyaan
 
-# Tulis semua perintah-perintah SQL percobaan di atas beserta outputnya!
+Setelah menjalankan perintah di atas, Anda dapat kembali mencoba menghapus record dengan menggunakan perintah berikut:
 
-## 1. Menambah data :
-`INSERT INTO <table> (field1, ..., fieldn) VALUE (value1, ..., valuen)`
+```sql
+DELETE FROM dosen WHERE kd_ds = 'DS001';
+```
 
-*Contoh :*
+
+![image](ss/ss8.png)
+
+
+output :
+
+
+![image](ss/ss9.png)
+
+
+![image](ss/ss10.png)
+
+3. Ubah mode menjadi ON UPDATE CASCADE ON DELETE RESTRICT
+Untuk mengubah konstrain kunci asing menjadi ON UPDATE CASCADE dan ON DELETE RESTRICT, Anda perlu menghapus konstrain kunci asing yang ada dan menambahkan konstrain baru dengan opsi yang diinginkan. Berikut adalah langkah-langkahnya:
+
+Hapus konstrain kunci asing yang ada pada tabel "mahasiswa":
+
+```sql
+ALTER TABLE mahasiswa
+DROP FOREIGN KEY fk_dosenwali;
+```
+
+Tambahkan kembali konstrain kunci asing dengan opsi ON UPDATE CASCADE dan ON DELETE RESTRICT:
+
+```sql
+ALTER TABLE mahasiswa
+ADD CONSTRAINT fk_dosenwali
+FOREIGN KEY (kd_ds)
+REFERENCES dosen (kd_ds)
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+```
+
+![image](ss/ss11.png)
+
+
+4. Lakukan perubahan data pada tabel dosen (kd_ds)
+
+Berikut adalah contoh perintah untuk melakukan perubahan data pada tabel "dosen" dengan kolom "kd_ds":
+
+```sql
+UPDATE dosen
+SET kd_ds = 'DS006'
+WHERE kd_ds = 'DS001';
+```
+
+Perintah di atas akan mengubah nilai kolom "kd_ds" dari "DS001" menjadi "DS006" pada tabel "dosen". Anda dapat menyesuaikan nilai yang ingin Anda ubah dan kondisi WHERE sesuai dengan kebutuhan Anda.
+
+Pastikan untuk menjalankan perintah dengan hati-hati dan memastikan bahwa perubahan data yang Anda lakukan sesuai dengan kebutuhan dan kebijakan yang berlaku dalam basis data Anda.
+
+
+output: 
+
+
+![image](ss/ss12.png)
+
+5. Lakukan penghapusan data pada tabel dosen
+
+Untuk menghapus data dari tabel "dosen" dengan kondisi "kd_ds = 'DS003'", Anda dapat menggunakan perintah DELETE dengan sintaks yang benar. Berikut adalah contoh perintah yang dapat Anda gunakan:
+
+```sql
+DELETE FROM dosen
+WHERE kd_ds = 'DS003';
+```
+
+output :
+
+
+![image](ss/ss15.png)
+
+output eror
+Jika Anda ingin menghapus record dari tabel "dosen" yang memiliki referensi dari tabel "mahasiswa", Anda dapat menggunakan opsi ON DELETE SET NULL pada konstrain kunci asing untuk mengatur nilai yang mengacu pada record yang akan dihapus menjadi NULL. Berikut adalah perbaikan yang perlu dilakukan pada konstrain kunci asing fk_dosenwali di tabel "mahasiswa".
+
+
+6. Ubah mode menjadi ON UPDATE CASCADE ON DELETE SET NULL
+
+```sql
+ALTER TABLE mahasiswa
+DROP FOREIGN KEY fk_dosenwali;
+```
+
+```sql
+ALTER TABLE mahasiswa
+ADD CONSTRAINT fk_dosenwali
+FOREIGN KEY (kd_ds)
+REFERENCES dosen (kd_ds)
+ON DELETE SET NULL;
+```
+
+
+![image](ss/ss16.png)
+
+
+Dengan perubahan di atas, ketika Anda menghapus record dari tabel "dosen" yang memiliki referensi di tabel "mahasiswa", nilai kolom "kd_ds" dalam tabel "mahasiswa" yang mengacu pada record yang dihapus akan diatur menjadi NULL.
+
+Setelah menjalankan perintah di atas, Anda dapat kembali mencoba menghapus record dengan menggunakan perintah berikut:
+
+7. Lakukan penghapusan data pada tabel dosen
+
+```sql
+DELETE FROM dosen WHERE kd_ds = 'DS003';
 
 ```
-INSERT INTO biodata (nim, nama, alamat) VALUES ('11223344','Yoga','Bekasi'),
-('11223345', 'Muhammad', 'Jakarta');
-```
-![](foto/15.png)
 
-## 2. Menampilkan data :
+![image](ss/ss17.png)
 
-`SELECT * FROM <table> SELECT [field1, ..., fieldn] FROM <table>`
 
-*Contoh :*
-```SELECT * FROM biodata;```
+Perintah ini akan menghapus record dengan nilai "DS003" dari tabel "dosen", dan karena menggunakan opsi ON DELETE SET NULL, nilai kolom "kd_ds" dalam tabel "mahasiswa" yang mengacu pada record yang dihapus akan diatur menjadi NULL.
 
-![](foto/18.png)
 
-## 3. Mengubah data :
+## Evaluasi dan Pertanyaan
+* Tulis semua perintah-perintah SQL percobaan di atas beserta outputnya!
 
-`UPDATE <table> SET field1=val1, ..., fieldn=valn WHERE <kondisi>;`
+### Syntax SQL
 
-*Contoh :*
+- Membuat foreign key
 
-```UPDATE biodata SET nim=11223346 WHERE nama='Muhammad';```
+  - Dalam ALTER TABLE:
+    ```SQL
+    ALTER TABLE mahasiswa
+    ADD CONSTRAINT fk_dosenwali FOREIGN KEY (kd_ds)     REFERENCES dosen(kd_ds)
+    ```
+  - Dalam CREATE TABLE:
+    ```sql
+    CREATE TABLE mahasiswa(
+    nim VARCHAR(10) NOT NULL,
+    nama VARCHAR(100) NOT NULL,
+    kd_ds VARCHAR(10),
+    PRIMARY KEY(nim),
+    CONSTRAINT fk_DosenWali FOREIGN KEY (kd_ds)
+    REFERENCES dosen(kd_ds)
+    );
+    ```
 
-![](foto/16.png)
+  ```
 
-## 4. Menghapus data :
+  ```
 
-`DELETE FROM <table> WHERE <kondisi>`
+- Mengubah data
+  ```sql
+  UPDATE mahasiswa
+  SET kd_ds = 'DS011' WHERE nim = 112233445;
+  ```
+- Menampilkan CREATE TABLE
+  ```sql
+  SHOW CREATE TABLE  mahasiswa;
+  ```
+- Mode ON UPDATE CASCADE ON DELETE CASCADE
+  ```sql
+  ALTER TABLE mahasiswa
+  DROP FOREIGN KEY fk_mahasiswa_dosen,
+  ADD CONSTRAINT fk_dosenwali FOREIGN KEY (kd_ds) REFERENCES dosen(kd_ds) ON UPDATE CASCADE ON DELETE CASCADE;
+  ```
+- Menghapus data
+  ```sql
+  DELETE FROM dosen WHERE kd_ds = 'DS001';
+  ```
+- Mode ON UPDATE CASCADE ON DELETE NOT NULL
+  ```sql
+  ALTER TABLE <table>
+  DROP FOREIGN KEY <nama_constraint_lama>,
+  ADD CONSTRAINT <nama_constraint_baru> FOREIGN KEY (field) REFERENCES <table_references(filed_references)> ON UPDATE CASCADE ON DELETE NOT NULL;
+  ```
+- Mengubah data
+  ```sql
+  UPDATE dosen
+  SET kd_ds = 'DS006' WHERE nama = 'Haha Hihi';
+  ```
+- Menghapus data
+  ```sql
+  DELETE FROM dosen WHERE nim = 'DS003';
+    ```
 
-*Contoh :*
+* Apa bedanya penggunaan RESTRICT dan penggunaan CASCADE
+- RESTRICT : ketika menggunakan opsi RESTRICT dalam keterkatian, aturan keterkaitan akan membatasi aksi yang dapat dilakukan pada data yang terkait. Jika ada aksi yang menyebabkan konflik atau melanggar aturan keterkaitan. RESTRICT akan mencegaah aksi tersebut dilakukan. Misalnya, jika ada keterkaitan antara Tabel A dan Tabel B, dan kita mencoba untuk menghapus baris dari Tabel A yang memiliki keterkaitan dengan Tabel B, RESTRICT akan mencegah penghapusan tersebut jika ada baris yang masih terkait dalam Tabel B. Dengan menggunakan RESTRICT, aksi yang melanggar keterkaitan akan ditolak.
+- CASCADE : ketika menggunakan opsi CASCADE dalam keterkaitan, aturan keterkaitan akan menyebabkan aksi yang dilakukan pada satu tabel juga mempengaruhi tabel yang terkait. Jadi, jika ada aksi yang dilakukan pada tabel yang memiliki ketertakitan dengan tabel lain, CASCADE akan mengakibatkan aksi tersebut juga berdampak pada tabel yang terkait. Misalnya, jika ada keterkaitan antara Tabel A dan Tabel B, dan kita menghapus baris dari Tabel A, CASCADE akan menghapus semua baris yang terkait dengan Tabel B secara otomatis. Dengan menggunakan CASCADE, aksi yang dilakukkan pada satu tabel akan menyebabkan kaskade aksi pada tabel yang terkait.
+* Berikan kesimpulan anda!
 
-```
-DELETE FROM biodata WHERE nama='Muhammad';
-```
-![](foto/17.png)
+SQL Constraint digunakan untuk menentukan aturan untuk data dalam tabel.
 
-# Apa bedanya penggunaan BETWEEN dan penggunaan operator >= dan <= ?
+Constraint digunakan untuk membatasi jenis data yang bisa masuk ke tabel. Ini memastikan keakuratan dan keandalan data dalam tabel.
 
-```
-- (Contoh BETWEEN: tgl_lahir BETWEEN '1972-10-10' AND '1992-10-11')
+Constraint dapat berupa level kolom atau level tabel.
 
-- (Contoh >= dan <=: tgl_lahir >= '1980-11-11' AND tgl_lahir <= '1992-10-11')
-```
-Operator BETWEEN ini untuk menangani operasi “jangkauan” sedangkan operator >= dan <= termasuk pada operator relasional. Operator yang digunakan untuk perbandingan antara dua buah nilai. Jenis dari operator ini adalah: = , >, <, >=, <=, <>.
+Constraint level kolom berlaku untuk kolom, dan batasan level tabel berlaku untuk seluruh tabel.
 
-# Kesimpulan
+RESTRICT : RESTRICT membatasi aksi yang melanggar keterkaitan antara tabel.
+CASCADE : CASCADE mempengaruhi tabel yang terkait dengan aksi yang dilakukan pada tabel utama. Keitka memilih antara RESTRICT dan CASCADE, pertimbangkan tujuan dan kebutuhan skema basis data yang sedang Anda bangun. RESTRICT cocok jika Anda ingin menerapkan pembatasan yang ketat pada aksi yang melanggar keterkaitan, sementara CASCADE memungkinkan aksi pada satu tabel juga berdampak pada tabel terkait.
 
-Data Manipulation Language (DML) adalah bagian dari Structured Query Language (SQL) yang digunakan untuk mengatur dan memanipulasi data pada database. Dengan DML, Anda dapat melakukan berbagai operasi terhadap data. 
+Buat laporan praktikum yang berisi, langkah-langkah praktikum beserta screenshot yang sudah dilakukan dalam bentuk dokumen
 
-DDL (Data Definition Language) adalah bahasa yang digunakan untuk mendeskripsikan data dan hubungannya dalam suatu database. DDL digunakan untuk membuat dan memodifikasi struktur objek pada suatu database menggunakan perintah dan sintaks spesifik yang telah ditetapkan.
+dokumen terlampir.
