@@ -1,4 +1,4 @@
-# Praktikum3
+# SQLPraktikum3
 
 ```
 Nama    : fakhri afif muhaimin
